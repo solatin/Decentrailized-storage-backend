@@ -1,0 +1,12 @@
+{
+  "bracketSpacing": true,
+  "printWidth": 100,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "tabWidth": 2,
+  "arrow-body-style": 1,
+  "useTabs": false,
+  "react/jsx-max-props-per-line": [1, { "when": "always" }],
+  "endOfLine": "crlf",
+  "consistent-return": 0
+}
