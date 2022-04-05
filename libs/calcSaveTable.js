@@ -1,30 +1,26 @@
-export default function calcSaveTable({
+/* eslint-disable no-unused-vars */
+const calcSaveTable = ({
   numOfServers,
   maxFilesProcessAtOnce = 1,
   maxFilesProcessPerServer = 1,
   maxInactiveServers,
   initialNumOfFiles,
-}) {
-  // const m = numOfServers;
-  // const k = maxFilesProcessAtOnce;
-  // const t = maxFilesProcessPerServer;
-  // const r = maxInactiveServers;
-  // const n = initialNumOfFiles;
-  const combinations = calcCombinations({ k: maxInactiveServers + 1, n: numOfServers });
+}) => {
   let currentPos = 0;
-  const saveTable = Array(initialNumOfFiles).fill(Array(numOfServers).fill(0));
+  const combinations = calcCombinations({ k: maxInactiveServers + 1, n: numOfServers });
+  const saveTable = Array(numOfServers).fill(Array(initialNumOfFiles).fill(0));
 
   while (currentPos < initialNumOfFiles) {
     for (let i = 0; i < numOfServers; i++) {
-      for (let j = 0; j < Math.min(combinations.size(), initialNumOfFiles - currentPos); j++) {
-        saveTable[i][j + currentPos] = combinations[j][i];
+      for (let j = 0; j < Math.min(combinations.length, initialNumOfFiles - currentPos); j++) {
+        console.log(combinations[j][i], saveTable[i][`${j + currentPos}`]);
+        saveTable[i][`${j + currentPos}`] = combinations[j][i];
       }
     }
-    currentPos += Math.min(combinations.size(), n - currentPos);
+    currentPos += Math.min(combinations.length, initialNumOfFiles - currentPos);
   }
-
   return saveTable;
-}
+};
 
 const buildCombinations = ({ checked, n, k, count, index, combinations }) => {
   if (count === k) {
@@ -46,3 +42,22 @@ const calcCombinations = ({ k, n }) => {
   buildCombinations({ checked, n, k, count: 0, index: 0, combinations });
   return combinations;
 };
+const printResult = (arr, row, column) => {
+  console.log('\n         ');
+  for (let i = 0; i < column; i++) {
+    console.log(`F${i + 1}  `);
+  }
+  console.log('\n');
+  for (let i = 0; i < row; i++) {
+    console.log(`Server ${i + 1}  `);
+    for (let j = 0; j < column; j++) {
+      console.log(`${arr[i][j]}   `);
+      if (j > 8) {
+        console.log(' ');
+      }
+    }
+    console.log('\n');
+  }
+};
+
+module.exports = { calcSaveTable, printResult };

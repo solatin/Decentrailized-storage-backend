@@ -82,10 +82,10 @@ int min(int a, int b)
 
 int **processSaveFile(int m, int k, int r, int n)
 {
-  int **arr = new int *[n];
+  int **arr = new int *[m];
   for (int i = 0; i < n; i++)
   {
-    arr[i] = new int[m];
+    arr[i] = new int[n];
   }
   // calcCombination(r + 1, m);
   // for (int i = 0; i < m; i++)
