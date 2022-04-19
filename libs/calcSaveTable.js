@@ -8,12 +8,12 @@ const calcSaveTable = ({
 }) => {
   let currentPos = 0;
   const combinations = calcCombinations({ k: maxInactiveServers + 1, n: numOfServers });
-  const saveTable = Array(numOfServers).fill(Array(initialNumOfFiles).fill(0));
+  const saveTable = [];
 
   while (currentPos < initialNumOfFiles) {
     for (let i = 0; i < numOfServers; i++) {
+      saveTable[i] = [];
       for (let j = 0; j < Math.min(combinations.length, initialNumOfFiles - currentPos); j++) {
-        console.log(combinations[j][i], saveTable[i][`${j + currentPos}`]);
         saveTable[i][`${j + currentPos}`] = combinations[j][i];
       }
     }
@@ -42,22 +42,5 @@ const calcCombinations = ({ k, n }) => {
   buildCombinations({ checked, n, k, count: 0, index: 0, combinations });
   return combinations;
 };
-const printResult = (arr, row, column) => {
-  console.log('\n         ');
-  for (let i = 0; i < column; i++) {
-    console.log(`F${i + 1}  `);
-  }
-  console.log('\n');
-  for (let i = 0; i < row; i++) {
-    console.log(`Server ${i + 1}  `);
-    for (let j = 0; j < column; j++) {
-      console.log(`${arr[i][j]}   `);
-      if (j > 8) {
-        console.log(' ');
-      }
-    }
-    console.log('\n');
-  }
-};
 
-module.exports = { calcSaveTable, printResult };
+module.exports = { calcSaveTable };
