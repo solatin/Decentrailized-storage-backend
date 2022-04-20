@@ -26,8 +26,6 @@ router.post('/', upload.single('file'), async (req, res, next) => {
     next(error);
   } else {
     try {
-      // console.log('savefile to main db, file: ', file);
-
       const fileList = await FileInfo.find();
       const fileIndex = fileList.length;
       const newFile = new FileInfo({ fileIndex, name: file.originalname });
@@ -36,20 +34,18 @@ router.post('/', upload.single('file'), async (req, res, next) => {
       // save file to child server
       const saveTableInstance = await SaveTable.findOne();
       const saveTable = JSON.parse(saveTableInstance.value);
-      // console.log('saveTable', saveTable);
 
       const initialNumOfFiles = saveTable[0].length;
       const numOfServers = saveTable.length;
-      const saveFileIndex =
-        ((fileIndex % initialNumOfFiles) - 1 + initialNumOfFiles) % initialNumOfFiles;
+      const saveFileIndex = fileIndex % initialNumOfFiles;
       const saveServerList = [];
       for (let i = 0; i < numOfServers; i++) {
         if (saveTable[i][saveFileIndex]) {
           saveServerList.push(i);
         }
       }
-      console.log('list of servers to save file: ', saveServerList);
-      res.end();
+      // console.log('list of servers to save file: ', saveServerList);
+      res.json({ fileInfo: newFile, saveServer: saveServerList });
     } catch (e) {
       console.log(e);
       res.status(404).send(e);

@@ -7,14 +7,18 @@ const calcSaveTable = ({
   initialNumOfFiles,
 }) => {
   let currentPos = 0;
-  const combinations = calcCombinations({ k: maxInactiveServers + 1, n: numOfServers });
+  const combinations = calcCombinations({
+    k: maxInactiveServers + maxFilesProcessAtOnce,
+    n: numOfServers,
+  });
   const saveTable = [];
-
   while (currentPos < initialNumOfFiles) {
     for (let i = 0; i < numOfServers; i++) {
-      saveTable[i] = [];
+      if (!Array.isArray(saveTable[i])) {
+        saveTable[i] = [];
+      }
       for (let j = 0; j < Math.min(combinations.length, initialNumOfFiles - currentPos); j++) {
-        saveTable[i][`${j + currentPos}`] = combinations[j][i];
+        saveTable[i][j + currentPos] = combinations[j][i];
       }
     }
     currentPos += Math.min(combinations.length, initialNumOfFiles - currentPos);
@@ -28,12 +32,19 @@ const buildCombinations = ({ checked, n, k, count, index, combinations }) => {
     combinations.push(oneCombination);
     return;
   }
-  checked.forEach((el, idx) => {
-    if (el || idx < index) return;
-    checked[idx] = true;
-    buildCombinations({ checked, n, k, count: count + 1, index: index + 1, combinations });
-    checked[idx] = false;
-  });
+  // checked.forEach((el, idx) => {
+  //   if (el || idx < index) return;
+  //   checked[idx] = true;
+  //   buildCombinations({ checked, n, k, count: count + 1, index: index + 1, combinations });
+  //   checked[idx] = false;
+  // });
+  for (let i = index; i < n; i++) {
+    if (!checked[i]) {
+      checked[i] = true;
+      buildCombinations({ checked, n, k, count: count + 1, index: i + 1, combinations });
+      checked[i] = false;
+    }
+  }
 };
 
 const calcCombinations = ({ k, n }) => {

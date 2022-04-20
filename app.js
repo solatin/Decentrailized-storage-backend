@@ -13,6 +13,14 @@ const port = 3000;
 
 app.use(express.json());
 
+calcSaveTable({
+  numOfServers: 4,
+  maxInactiveServers: 1,
+  initialNumOfFiles: 8,
+  maxFilesProcessAtOnce: 1,
+  maxFilesProcessPerServer: 1,
+});
+
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
@@ -49,8 +57,7 @@ app.post('/set-up', async (req, res) => {
     maxFilesProcessAtOnce,
     maxFilesProcessPerServer,
   });
-  console.log(numOfServers, maxInactiveServers, initialNumOfFiles);
-  SaveTable.remove({});
+  await SaveTable.deleteMany({});
   const saveTable = new SaveTable({ value: JSON.stringify(value) });
 
   saveTable.save();
@@ -70,7 +77,7 @@ app.post('/find', async (req, res) => {
     maxFilesProcessAtOnce: 1,
     inactiveServerList,
   });
-  res.json(result);
+  res.json(Object.keys(result)[0]);
 });
 
 app.listen(port, () => {
